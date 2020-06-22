@@ -32,7 +32,13 @@ export const onCreatePage = async (
   }
 
   const {createPage, deletePage} = actions;
-  const {defaultLanguage = 'en', languages = ['en'], path} = pluginOptions;
+  const {
+    defaultLanguage = 'en',
+    languages = ['en'],
+    localizedPaths = true,
+    languageFromPath = (path) => path.slice(0, 4).replace(/\//g, ''),
+    path
+  } = pluginOptions;
 
   const generatePage = async (language: string, routed = false): Promise<Page<PageContext>> => {
     const resources = await getResources(path, language);
@@ -55,18 +61,25 @@ export const onCreatePage = async (
     };
   };
 
-  const newPage = await generatePage(defaultLanguage);
   try {
     deletePage(page);
   } catch {}
-  createPage(newPage);
 
-  await BP.map(languages, async (lng) => {
-    const localePage = await generatePage(lng, true);
-    const regexp = new RegExp('/404/?$');
-    if (regexp.test(localePage.path)) {
-      localePage.matchPath = `/${lng}/*`;
-    }
-    createPage(localePage);
-  });
+  if (localizedPaths) {
+    const newPage = await generatePage(defaultLanguage);
+    createPage(newPage);
+
+    await BP.map(languages, async (lng) => {
+      const localePage = await generatePage(lng, true);
+      const regexp = new RegExp('/404/?$');
+      if (regexp.test(localePage.path)) {
+        localePage.matchPath = `/${lng}/*`;
+      }
+      createPage(localePage);
+    });
+  } else {
+    const lng = languageFromPath(page.path);
+    const newPage = await generatePage(languages.includes(lng) ? lng : defaultLanguage);
+    createPage(newPage);
+  }
 };
