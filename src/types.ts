@@ -7,7 +7,7 @@ export type PluginOptions = {
   defaultLanguage: string;
   path: string;
   redirect: boolean;
-  localizedPaths?: boolean;
+  localizedPaths?: RegExp;
   languageFromPath?(path: string): string;
   siteUrl?: string;
   i18nextOptions: InitOptions;

@@ -35,7 +35,7 @@ export const onCreatePage = async (
   const {
     defaultLanguage = 'en',
     languages = ['en'],
-    localizedPaths = true,
+    localizedPaths = /.*/,
     languageFromPath = (path) => path.slice(0, 4).replace(/\//g, ''),
     path
   } = pluginOptions;
@@ -65,7 +65,7 @@ export const onCreatePage = async (
     deletePage(page);
   } catch {}
 
-  if (localizedPaths) {
+  if (localizedPaths.test(page.path)) {
     const newPage = await generatePage(defaultLanguage);
     createPage(newPage);
 

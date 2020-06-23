@@ -201,8 +201,8 @@ const Header = ({siteTitle}) => {
 | languages        | string[] | supported language keys                                                                                                                                                                                          |
 | defaultLanguage  | string   | default language when visiting `/page` instead of `/es/page`                                                                                                                                                     |
 | redirect         | boolean  | if the value is `true`, `/` or `/page-2` will be redirected to the user's preferred language router. e.g) `/es` or `/es/page-2`. Otherwise, the pages will render `defaultLangugage` language. Default is `true` |
-| localizedPaths   | boolean  | if the value is `true`, multi-language url routes will be creacted for each single page component. Otherwise, language will be extracted from path. Default is `true`                                            |
-| languageFromPath | function | if `localizedPaths` is `false`, language of pages is extracted from path using this function. Default: first 2-chars-long folder (ie. /**en**/page-1)                                                            |
+| localizedPaths   | regexp   | for routes that pass test, multi-language url routes will be creacted, otherwise language will be extracted from path. Default is `/.*/` (all routes), to disable use `/(?!)/` (no routes)                       |
+| languageFromPath | function | for routes that not pass `localizedPaths` test, language of pages is extracted from path using this function. Default: first 2-chars-long folder (ie. /**en**/page-1)                                            |
 | i18nextOptions   | object   | [i18next configuration options](https://www.i18next.com/overview/configuration-options)                                                                                                                          |
 
 ## Plugin API
